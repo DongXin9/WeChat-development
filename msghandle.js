@@ -30,7 +30,7 @@ function userMsg(wxmsg,retmsg){
             retmsg.msgtype = 'text';
             return formatMsg(retmsg);
         } else if(wxmsg.Content == 'about'){
-            retmsg.msg = '我是这个测试号的开发者，如有问题请发邮件到23333@qq.com'
+            retmsg.msg = '我是这个测试号的开发者，如有问题请发邮件到2627405095@qq.com'
             retmsg.msgtype = 'text';
             return formatMsg(retmsg);
         } else {
@@ -55,9 +55,32 @@ function userMsg(wxmsg,retmsg){
         return formatMsg(retmsg);
     }
 }
+function eventMsg(wxmsg,retmsg){
+    retmsg.msgtype = 'text';
+    switch(wxmsg.Event){
+        case 'subscribe':
+            retmsg.msg = '你好，这是一个测试号，尽管没什么用，但还是谢谢关注'
+            return formatMsg(retmsg);
+        case 'unsubscribe':
+            console.log(wxmsg.FromUserName,'取消关注');
+            break;
+        case 'CLICK':
+            retmsg.msg = wxmsg.EventKey;
+            return formatMsg(retmsg);
+        case 'VIEW':
+            console.log('用户浏览',wxmsg.EventKey);
+            break;
+        default:
+            return '';
+    }
+    return '';
+}
 exports.help = help;
 exports.userMsg = userMsg;
 //后续还会加入事件消息支持
 exports.msgDispatch = function msgDispatch(wxmsg, retmsg) {
+    if(wxmsg.MsgType === 'event'){
+        return eventMsg(wxmsg,retmsg);
+    }
     return userMsg(wxmsg, retmsg);
 };
